@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JobTrack — Complete Job Search Manager</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#172033;--muted:#687386;--line:#e4e8ef;--primary:#2563eb;--primary2:#eff6ff;--danger:#dc2626;--success:#16a34a;--warn:#d97706;--shadow:0 8px 30px #17203310}
+[data-theme="dark"]{--bg:#0f172a;--panel:#172033;--text:#f3f6fb;--muted:#9aa7ba;--line:#293449;--primary:#60a5fa;--primary2:#1e3a5f;--shadow:0 8px 30px #0005}
+[data-theme="green"]{--primary:#059669;--primary2:#ecfdf5}
+[data-theme="purple"]{--primary:#7c3aed;--primary2:#f5f3ff}
+[data-theme="orange"]{--primary:#ea580c;--primary2:#fff7ed}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:flex}.side{position:fixed;left:0;top:0;bottom:0;width:245px;background:var(--panel);border-right:1px solid var(--line);padding:22px 14px;z-index:5;overflow:auto}.brand{font-size:23px;font-weight:900;padding:0 12px 25px}.brand b{color:var(--primary)}.nav button{display:block;width:100%;border:0;background:transparent;color:var(--muted);padding:11px 12px;border-radius:10px;text-align:left;margin:2px 0}.nav button:hover,.nav button.active{background:var(--primary2);color:var(--primary);font-weight:750}.main{margin-left:245px;padding:27px 32px;width:calc(100% - 245px)}.view{display:none}.view.active{display:block}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.top h1{font-size:27px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px}.btn{border:0;border-radius:9px;padding:10px 15px;font-weight:750}.primary{background:var(--primary);color:#fff}.secondary{background:var(--primary2);color:var(--primary)}.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.danger{background:var(--danger);color:#fff}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card,.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.stat{padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:6px}.grid{display:grid;grid-template-columns:1.65fr 1fr;gap:17px;margin-top:17px}.card{padding:19px}.card h2,.card h3{margin:0 0 15px}.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.input,.select,.textarea{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px;border-radius:9px;outline:none}.toolbar .input{flex:1;min-width:180px}.job{padding:14px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.job:first-child{border-top:0}.company{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:5px}.pill{font-size:11px;font-weight:800;border-radius:20px;padding:6px 9px;display:inline-block}.saved{background:#f1f5f9;color:#475569}.applied{background:#eef2ff;color:#4338ca}.screening{background:#fff7ed;color:#c2410c}.interview{background:#ecfdf5;color:#15803d}.offer,.accepted{background:#dcfce7;color:#166534}.rejected{background:#fef2f2;color:#b91c1c}.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.mini{font-size:11px;padding:6px 8px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:7px}.mini:hover{color:var(--primary);border-color:var(--primary)}.pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:175px}.pbar{display:flex;flex-direction:column;justify-content:end;text-align:center;height:100%;font-size:9px;color:var(--muted)}.pbar i{display:block;background:var(--primary);border-radius:6px 6px 0 0;min-height:8px;margin-bottom:6px}.next{padding:14px;border-radius:10px;background:var(--primary2)}.empty{text-align:center;color:var(--muted);padding:28px}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:11px 7px;border-bottom:1px solid var(--line);font-size:12px}.table th{color:var(--muted);font-size:10px;text-transform:uppercase}.setting{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}.theme-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.theme{border:2px solid var(--line);border-radius:10px;padding:10px;background:var(--panel);color:var(--text)}.theme.active{border-color:var(--primary)}.swatch{height:23px;border-radius:6px;margin-bottom:6px}.blue{background:#2563eb}.green{background:#059669}.purple{background:#7c3aed}.orange{background:#ea580c}.dark{background:#172033}.modal{position:fixed;inset:0;background:#02061788;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.dialog{background:var(--panel);width:min(760px,100%);max-height:93vh;overflow:auto;border-radius:16px;padding:22px}.form{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:11px;font-weight:750}.full{grid-column:1/-1}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.toast{position:fixed;right:20px;bottom:20px;background:var(--text);color:var(--panel);padding:11px 15px;border-radius:10px;display:none;z-index:30}.toast.show{display:block}.barrow{display:grid;grid-template-columns:105px 1fr 35px;gap:8px;align-items:center;margin:10px 0;font-size:12px}.barline{height:9px;background:var(--line);border-radius:9px;overflow:hidden}.barline i{display:block;height:100%;background:var(--primary)}.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.detail-box{padding:12px;border:1px solid var(--line);border-radius:9px}.detail-box small{display:block;color:var(--muted);font-size:10px;margin-bottom:5px}.detail-box.full{grid-column:1/-1}.detail-notes{white-space:pre-wrap;line-height:1.55}.job-link{color:var(--primary);word-break:break-all}.notice{padding:11px;border-radius:9px;background:var(--primary2);color:var(--primary);font-size:12px;margin-bottom:14px}.tabs{display:flex;gap:7px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow:auto}.tab{border:0;background:transparent;color:var(--muted);padding:10px 12px;white-space:nowrap}.tab.active{color:var(--primary);border-bottom:2px solid var(--primary);font-weight:750}.checklist label{display:flex;gap:8px;align-items:center;padding:8px 0}.resume{border:1px dashed var(--line);padding:18px;border-radius:10px}.kbd{font-size:10px;padding:3px 6px;border:1px solid var(--line);border-radius:5px;color:var(--muted)}.badge{font-size:10px;background:var(--primary2);color:var(--primary);padding:4px 7px;border-radius:10px}.two{display:grid;grid-template-columns:1fr 1fr;gap:15px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.pro-tools{margin-top:17px}.locked{opacity:.72;position:relative}.locked:after{content:"PRO";position:absolute;top:12px;right:12px;background:var(--primary);color:#fff;border-radius:10px;padding:4px 7px;font-size:10px;font-weight:800}.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.feature-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.feature-card h3{margin:0 0 7px}.feature-card textarea{min-height:125px}.result{margin-top:12px;padding:13px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}.score{font-size:34px;font-weight:900;color:var(--primary)}.good{color:var(--success);font-weight:700}.warn{color:var(--warn);font-weight:700}.tag{display:inline-block;padding:5px 8px;border-radius:999px;background:var(--primary2);color:var(--primary);font-size:11px;font-weight:700;margin:3px}.cv-list{display:grid;gap:8px}.cv-item{display:flex;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--line);border-radius:9px}@media(max-width:700px){.feature-grid{grid-template-columns:1fr}}
+
+@media(max-width:950px){.side{width:70px}.brand{font-size:0;text-align:center}.brand:after{content:"J";font-size:24px;color:var(--primary)}.nav button{font-size:0;text-align:center}.nav button:before{content:"●";font-size:14px}.main{margin-left:70px;width:calc(100% - 70px);padding:19px}.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.three{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.top{align-items:flex-start}.top h1{font-size:22px}.stats{grid-template-columns:1fr 1fr}.form,.detail-grid,.two{grid-template-columns:1fr}.full,.detail-box.full{grid-column:auto}.theme-grid{grid-template-columns:repeat(3,1fr)}.job{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side"><div class="brand">Job<b>Track</b></div><nav class="nav">
+<button class="active" data-view="dashboard">▣ &nbsp; Dashboard</button>
+<button data-view="applications">☷ &nbsp; Applications</button>
+<button data-view="interviews">◷ &nbsp; Interviews</button>
+<button data-view="tasks">✓ &nbsp; Follow-ups</button>
+<button data-view="companies">▤ &nbsp; Companies</button>
+<button data-view="analytics">▥ &nbsp; Analytics</button>
+<button data-view="resume">▤ &nbsp; Resume</button>
+<button data-view="pricing">⭐ &nbsp; Pro</button>
+<button data-view="protools">🤖 &nbsp; Smart Tools</button>
+<button data-view="settings">⚙ &nbsp; Settings</button>
+</nav></aside>
+<main class="main">
+
+<section id="dashboard" class="view active">
+<div class="top"><div><h1 id="greeting">Good afternoon, Oscar 👋</h1><div class="sub">Your complete job-search command center.</div></div><button class="btn primary" onclick="openApplication()">+ Add Application</button></div>
+<div class="stats"><div class="stat"><small>Total applications</small><strong id="sTotal">0</strong></div><div class="stat"><small>Applied</small><strong id="sApplied">0</strong></div><div class="stat"><small>Interviews</small><strong id="sInterview">0</strong></div><div class="stat"><small>Offers</small><strong id="sOffer">0</strong></div></div>
+<div class="grid"><div class="card"><h3>Recent applications</h3><div id="dashJobs"></div></div><div><div class="card"><h3>Application pipeline</h3><div id="dashPipeline" class="pipeline"></div></div><div class="card" style="margin-top:17px"><h3>Next interview</h3><div id="nextInterview" class="next"></div></div><div class="card" style="margin-top:17px"><h3>Follow-up due</h3><div id="dashTasks"></div></div></div></div>
+</section>
+
+<section id="applications" class="view"><div class="top"><div><h1>Applications</h1><div class="sub">Save, track, compare and manage every opportunity.</div></div><button class="btn primary" onclick="openApplication()">+ Add Application</button></div><div class="card">
+<div class="toolbar"><input class="input" id="search" placeholder="Search company, title, location or notes..." oninput="renderAll()"><select class="select" id="statusFilter" onchange="renderAll()"><option value="">All statuses</option><option>Saved</option><option>Applied</option><option>Screening</option><option>Interview</option><option>Offer</option><option>Accepted</option><option>Rejected</option></select><select class="select" id="sortFilter" onchange="renderAll()"><option value="new">Newest</option><option value="old">Oldest</option><option value="company">Company A-Z</option><option value="interview">Interview date</option></select></div>
+<div id="allJobs"></div></div></section>
+
+<section id="interviews" class="view"><div class="top"><div><h1>Interviews</h1><div class="sub">Upcoming meetings, preparation notes and outcomes.</div></div><button class="btn primary" onclick="openApplication()">+ Add Application</button></div><div class="card"><div id="interviewList"></div></div></section>
+
+<section id="tasks" class="view"><div class="top"><div><h1>Follow-ups</h1><div class="sub">Never forget to follow up with recruiters.</div></div><button class="btn primary" onclick="addTask()">+ Add Follow-up</button></div><div class="card"><div id="taskList"></div></div></section>
+
+<section id="companies" class="view"><div class="top"><div><h1>Companies</h1><div class="sub">See all employers you've interacted with.</div></div></div><div class="card"><div id="companyList"></div></div></section>
+
+<section id="analytics" class="view"><div class="top"><div><h1>Analytics</h1><div class="sub">Measure your job-search activity and conversion rates.</div></div></div>
+<div class="stats"><div class="stat"><small>Applications this month</small><strong id="aMonth">0</strong></div><div class="stat"><small>Response rate</small><strong id="aResponse">0%</strong></div><div class="stat"><small>Interview rate</small><strong id="aInterview">0%</strong></div><div class="stat"><small>Offer rate</small><strong id="aOffer">0%</strong></div></div>
+<div class="grid"><div class="card"><h3>Status breakdown</h3><div id="breakdown"></div></div><div class="card"><h3>Locations</h3><div id="locations"></div></div></div>
+<div class="card" style="margin-top:17px"><h3>Monthly activity</h3><div id="monthly"></div></div>
+</section>
+
+<section id="resume" class="view"><div class="top"><div><h1>Resume & Career Kit</h1><div class="sub">Keep your application materials organized.</div></div></div><div class="two"><div class="card"><h3>Resume checklist</h3><div class="checklist"><label><input type="checkbox" data-check="resume1"> Updated contact information</label><label><input type="checkbox" data-check="resume2"> Professional summary</label><label><input type="checkbox" data-check="resume3"> Recent experience</label><label><input type="checkbox" data-check="resume4"> Skills tailored to target roles</label><label><input type="checkbox" data-check="resume5"> References ready</label></div></div><div class="card"><h3>Career notes</h3><textarea id="careerNotes" class="textarea" rows="11" placeholder="Target roles, salary expectations, interview stories, achievements..."></textarea><div class="actions"><button class="btn primary" onclick="saveCareerNotes()">Save notes</button></div></div></div></section>
+
+<section id="pricing" class="view">
+<div class="top"><div><h1>JobTrack Pro ⭐</h1><div class="sub">Keep the free version simple, and charge for the features serious job seekers need.</div></div></div>
+<div class="notice"><b>Free:</b> up to 10 applications. <b>Pro:</b> unlimited applications plus advanced features.</div>
+<div class="three">
+<div class="card"><h2>Free</h2><p class="sub">For people starting their job search.</p><h2>UGX 0</h2><p>✓ Up to 10 applications<br>✓ Dashboard<br>✓ Interviews<br>✓ Follow-ups<br>✓ Basic analytics</p><button class="btn ghost" onclick="showView('applications')">Use Free</button></div>
+<div class="card" style="border:2px solid var(--primary)"><span class="badge">RECOMMENDED PLAN</span><h2>Pro Monthly</h2><p class="sub">For active job seekers.</p><h2>UGX 15,000 <small>/ month</small></h2><p>✓ Unlimited applications<br>✓ Smart Job Match & ATS check<br>✓ Cover letter generator<br>✓ Interview prep<br>✓ Smart follow-up messages<br>✓ Advanced analytics<br>✓ Multiple CV versions<br>✓ Cloud sync</p><button class="btn primary" onclick="startCheckout()">Get Pro</button></div>
+<div class="card"><h2>Pro Yearly</h2><p class="sub">One payment for a full year.</p><h2>UGX 100,000 <small>/ year</small></h2><p>✓ Everything in Pro Monthly<br>✓ 2 months free compared with monthly<br>✓ One yearly payment</p><button class="btn primary" onclick="startCheckout('yearly')">Get Pro</button></div>
+</div>
+<div class="card" style="margin-top:17px"><h3>How payment works</h3><p class="sub">JobTrack uses Pesapal for checkout. Your payment is verified on the server before Pro access is activated.</p><ol><li>Sign in to your JobTrack account.</li><li>Choose Monthly or Annual.</li><li>Complete payment on Pesapal.</li><li>JobTrack verifies the payment and unlocks Pro.</li></ol><div id="paymentNotice" class="notice">Sign in first, then choose a Pro plan.</div></div>
+</section>
+
+<section id="protools" class="view">
+<div class="top"><div><h1>JobTrack Smart Tools ⭐</h1><div class="sub">Powerful tools for improving applications and preparing for interviews.</div></div><span id="proBadge" class="badge">CHECKING PLAN…</span></div>
+<div id="proGate" class="notice"></div>
+<div class="feature-grid">
+<div class="feature-card"><h3>🎯 Job Match & ATS Check</h3><p class="sub">Paste a job description and your CV. JobTrack checks keyword and skill alignment.</p><div class="field" style="margin-top:10px"><label>Job description</label><textarea class="textarea" id="aiJobDesc" placeholder="Paste the job advert here..."></textarea></div><div class="field" style="margin-top:10px"><label>Your CV / resume</label><textarea class="textarea" id="aiResume" placeholder="Paste your CV text here..."></textarea></div><div class="actions"><button class="btn primary" onclick="runJobMatch()">Check my match</button></div><div id="matchResult" class="result" hidden></div></div>
+<div class="feature-card"><h3>✍️ Cover Letter Generator</h3><p class="sub">Create a clean, job-specific first draft from your details.</p><div class="form" style="margin-top:10px"><div class="field"><label>Your name</label><input class="input" id="coverName" placeholder="Your name"></div><div class="field"><label>Company</label><input class="input" id="coverCompany" placeholder="Company name"></div><div class="field"><label>Job title</label><input class="input" id="coverRole" placeholder="Job title"></div><div class="field"><label>Key strength</label><input class="input" id="coverStrength" placeholder="Customer service, sales, IT support..."></div></div><div class="field" style="margin-top:10px"><label>Job description</label><textarea class="textarea" id="coverDesc" placeholder="Paste the job advert or requirements..."></textarea></div><div class="actions"><button class="btn primary" onclick="generateCoverLetter()">Generate draft</button><button class="btn ghost" onclick="copyText('coverResult')">Copy</button></div><div id="coverResult" class="result" hidden></div></div>
+<div class="feature-card"><h3>🎤 Interview Prep</h3><p class="sub">Get likely questions and a preparation checklist for the role.</p><div class="form" style="margin-top:10px"><div class="field"><label>Job title</label><input class="input" id="prepRole" placeholder="Customer Service Agent"></div><div class="field"><label>Company</label><input class="input" id="prepCompany" placeholder="Company name"></div></div><div class="field" style="margin-top:10px"><label>Job description</label><textarea class="textarea" id="prepDesc" placeholder="Paste the job requirements..."></textarea></div><div class="actions"><button class="btn primary" onclick="generateInterviewPrep()">Prepare me</button><button class="btn ghost" onclick="copyText('prepResult')">Copy</button></div><div id="prepResult" class="result" hidden></div></div>
+<div class="feature-card"><h3>📩 Smart Follow-up</h3><p class="sub">Create a polite follow-up message after an application or interview.</p><div class="form" style="margin-top:10px"><div class="field"><label>Your name</label><input class="input" id="followName" placeholder="Your name"></div><div class="field"><label>Company</label><input class="input" id="followCompany" placeholder="Company name"></div><div class="field"><label>Role</label><input class="input" id="followRole" placeholder="Job title"></div><div class="field"><label>Days since contact</label><input class="input" id="followDays" type="number" min="1" value="7"></div></div><div class="actions"><button class="btn primary" onclick="generateFollowup()">Create message</button><button class="btn ghost" onclick="copyText('followResult')">Copy</button></div><div id="followResult" class="result" hidden></div></div>
+<div class="feature-card"><h3>📄 Multiple CV Versions</h3><p class="sub">Keep different versions for customer service, sales, IT and other roles.</p><div class="form" style="margin-top:10px"><div class="field"><label>Version name</label><input class="input" id="cvName" placeholder="Customer Service CV"></div><div class="field"><label>Target role</label><input class="input" id="cvRole" placeholder="Customer Service Agent"></div><div class="field full"><label>CV text</label><textarea class="textarea" id="cvText" placeholder="Paste your CV text here..."></textarea></div></div><div class="actions"><button class="btn primary" onclick="saveCVVersion()">Save CV version</button></div><div id="cvList" class="cv-list" style="margin-top:12px"></div></div>
+<div class="feature-card"><h3>📊 Advanced Job Search Insights</h3><p class="sub">See which sources and application channels are producing the most interview-stage results.</p><div id="advancedInsights" class="result">Add more applications to see deeper insights.</div></div>
+</div></section>
+
+<section id="settings" class="view">
+<div class="card" style="margin-bottom:17px">
+  <h3>Cloud account</h3>
+  <p class="sub">Optional cloud sync. Your data stays local until you connect a Supabase project.</p>
+  <div class="form" style="margin-top:12px">
+    <div class="field"><label>Supabase project URL</label><input class="input" id="sbUrl" placeholder="https://your-project.supabase.co"></div>
+    <div class="field"><label>Supabase anon/public key</label><input class="input" id="sbKey" placeholder="eyJ..." type="password"></div>
+  </div>
+  <div class="actions" style="margin-top:12px">
+    <button class="btn secondary" onclick="saveCloudConfig()">Save connection</button>
+    <button class="btn ghost" onclick="openAuth()">Sign in / Create account</button>
+    <button class="btn danger" onclick="signOutCloud()">Sign out</button>
+  </div>
+  <div id="cloudStatus" class="sub" style="margin-top:10px">Local mode</div>
+</div>
+<div class="card" style="margin-bottom:17px">
+  <h3>Payments</h3>
+  <p class="sub">Pay securely through Pesapal. You must be signed in before starting a payment.</p>
+  <div class="notice">Pro Monthly: <b>UGX 15,000</b> · Pro Annual: <b>UGX 100,000</b></div>
+  <div class="actions" style="margin-top:12px"><button class="btn primary" onclick="showView('pricing')">See Pro plans</button><button class="btn ghost" onclick="syncProStatus(true)">Refresh Pro status</button></div>
+  <div id="paymentAccountStatus" class="sub" style="margin-top:10px">Checking your subscription...</div>
+</div>
+<div class="top"><div><h1>Settings</h1><div class="sub">Customize JobTrack and manage your data.</div></div></div><div class="card"><h3>Theme</h3><p class="sub">Choose your preferred appearance.</p><div class="theme-grid">
+<button class="theme" data-theme="blue" onclick="setTheme('blue')"><div class="swatch blue"></div>Blue</button><button class="theme" data-theme="green" onclick="setTheme('green')"><div class="swatch green"></div>Green</button><button class="theme" data-theme="purple" onclick="setTheme('purple')"><div class="swatch purple"></div>Purple</button><button class="theme" data-theme="orange" onclick="setTheme('orange')"><div class="swatch orange"></div>Orange</button><button class="theme" data-theme="dark" onclick="setTheme('dark')"><div class="swatch dark"></div>Dark</button></div>
+<div class="setting"><div><b>Export data</b><div class="sub">Back up applications, tasks, notes and preferences.</div></div><button class="btn secondary" onclick="exportData()">Export</button></div>
+<div class="setting"><div><b>Import data</b><div class="sub">Restore a JobTrack backup.</div></div><button class="btn secondary" onclick="$('importFile').click()">Import</button></div><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)">
+<div class="setting"><div><b>Demo data</b><div class="sub">Restore sample applications.</div></div><button class="btn danger" onclick="resetData()">Reset</button></div></div></section>
+
+<section id="details" class="view"><div class="top"><div><h1 id="detailTitle">Job Details</h1><div class="sub" id="detailCompany"></div></div><div class="actions"><button class="btn ghost" onclick="showView('applications')">← Back</button><button class="btn secondary" id="detailEdit">Edit</button></div></div><div id="detailContent"></div></section>
+</main></div>
+
+
+<div class="modal" id="authModal">
+  <div class="dialog">
+    <h2>JobTrack Cloud Account</h2>
+    <p class="sub">Create an account or sign in to sync your JobTrack data across devices.</p>
+    <div class="form">
+      <div class="field"><label>Email</label><input class="input" id="authEmail" type="email" placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input class="input" id="authPassword" type="password" placeholder="At least 6 characters"></div>
+    </div>
+    <div class="actions" style="margin-top:14px">
+      <button class="btn primary" onclick="signInCloud()">Sign in</button>
+      <button class="btn secondary" onclick="signUpCloud()">Create account</button>
+      <button class="btn ghost" onclick="closeAuth()">Cancel</button>
+    </div>
+    <div id="authMessage" class="sub" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="dialog"><h2 id="modalTitle">Add Application</h2><div class="form">
+<div class="field"><label>Company *</label><input class="input" id="fCompany"></div><div class="field"><label>Job title *</label><input class="input" id="fTitle"></div>
+<div class="field"><label>Location</label><input class="input" id="fLocation" placeholder="Kampala / Remote"></div><div class="field"><label>Employment type</label><select class="select" id="fType"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option><option>Remote</option></select></div>
+<div class="field"><label>Salary</label><input class="input" id="fSalary" placeholder="UGX 1,200,000"></div><div class="field"><label>Status</label><select class="select" id="fStatus"><option>Saved</option><option>Applied</option><option>Screening</option><option>Interview</option><option>Offer</option><option>Accepted</option><option>Rejected</option></select></div>
+<div class="field"><label>Application date</label><input class="input" type="date" id="fDate"></div><div class="field"><label>Interview date</label><input class="input" type="datetime-local" id="fInterview"></div>
+<div class="field"><label>Contact name</label><input class="input" id="fContact"></div><div class="field"><label>Contact email</label><input class="input" id="fEmail"></div>
+<div class="field full"><label>Job URL</label><input class="input" id="fUrl" placeholder="https://..."></div>
+<div class="field"><label>Source</label><select class="select" id="fSource"><option>Company website</option><option>LinkedIn</option><option>BrighterMonday</option><option>Indeed</option><option>Referral</option><option>Social media</option><option>Other</option></select></div>
+<div class="field"><label>Priority</label><select class="select" id="fPriority"><option>Normal</option><option>High</option><option>Low</option></select></div>
+<div class="field full"><label>Job description / requirements</label><textarea class="textarea" id="fDescription" rows="4" placeholder="Paste the important parts of the job advert here..."></textarea></div>
+<div class="field full"><label>Notes</label><textarea class="textarea" id="fNotes" rows="4" placeholder="Interview notes, recruiter messages, follow-up details..."></textarea></div>
+</div><div class="modal-actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveApplication()">Save</button></div></div></div>
+
+<div class="modal" id="taskModal"><div class="dialog"><h2>Add Follow-up</h2><div class="form"><div class="field full"><label>Application</label><select class="select" id="tApp"></select></div><div class="field"><label>Follow-up date</label><input class="input" type="date" id="tDate"></div><div class="field"><label>Reminder note</label><input class="input" id="tNote" placeholder="Email recruiter"></div></div><div class="modal-actions"><button class="btn ghost" onclick="closeTask()">Cancel</button><button class="btn primary" onclick="saveTask()">Save</button></div></div></div>
+
+<div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const KEY="jobtrack_v3_data";
+const demoApps=[
+{id:1,company:"Acme Finance",title:"Customer Service Agent",location:"Kampala",type:"Full-time",salary:"UGX 1.2M",status:"Interview",date:"2026-09-24",interview:"2026-09-26T10:00",contact:"HR Team",email:"",url:"https://example.com",source:"Company website",priority:"High",description:"Handle customer inquiries and resolve account issues.",notes:"Prepare customer service examples."},
+{id:2,company:"Platinum Credit",title:"Telesales Agent",location:"Kampala",type:"Full-time",salary:"UGX 1.0M + commission",status:"Applied",date:"2026-09-23",interview:"",contact:"",email:"",url:"",source:"Referral",priority:"High",description:"Sell salary loan products to eligible customers.",notes:"Follow up after application."},
+{id:3,company:"TechBridge",title:"IT Support Assistant",location:"Remote",type:"Remote",salary:"UGX 1.5M",status:"Screening",date:"2026-09-21",interview:"",contact:"Recruitment",email:"recruitment@example.com",url:"",source:"BrighterMonday",priority:"Normal",description:"Provide first-line IT and network support.",notes:"Review networking troubleshooting questions."},
+{id:4,company:"SBA Uganda",title:"Customer Service Agent",location:"Kampala",type:"Full-time",salary:"UGX 1.1M",status:"Rejected",date:"2026-09-18",interview:"",contact:"",email:"",url:"",source:"Company website",priority:"Low",description:"Customer support role.",notes:"Keep record for future opportunities."}
+];
+let apps=loadJSON(KEY,demoApps).map(normalizeApp),tasks=loadJSON("jobtrack_v3_tasks",[]),editingId=null,detailId=null;
+const $=id=>document.getElementById(id);
+function loadJSON(k,f){try{let x=JSON.parse(localStorage.getItem(k));return x??JSON.parse(JSON.stringify(f))}catch{return JSON.parse(JSON.stringify(f))}}
+function persist(){
+  localStorage.setItem(KEY,JSON.stringify(apps));
+  localStorage.setItem("jobtrack_v3_tasks",JSON.stringify(tasks));
+  if(window.jobtrackCloudReady && window.jobtrackUser) cloudSaveSnapshot();
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function safeHref(v){let u=String(v||"").trim();if(!/^https?:\/\//i.test(u))u="https://"+u;try{let x=new URL(u);return ["http:","https:"].includes(x.protocol)?x.href:"#"}catch{return "#"}}
+function statusClass(s){return String(s).toLowerCase()}
+function fmtDate(d){if(!d)return"—";let x=new Date(d+"T00:00:00");return isNaN(x)?"—":x.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+function fmtInterview(d){if(!d)return"No interview date";let x=new Date(d);return isNaN(x)?"Invalid date":x.toLocaleString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"})}
+function showView(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$(v).classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===v));renderAll()}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>showView(b.dataset.view));
+function jobHtml(a){return `<div class="job"><div><div class="company">${esc(a.company)} ${a.priority==="High"?'<span class="badge">High priority</span>':""}</div><div class="meta">${esc(a.title)} · ${esc(a.location||"No location")} · ${esc(a.salary||"Salary not specified")} · ${fmtDate(a.date)}</div><div class="actions"><button class="mini" onclick="viewDetails(${a.id})">Details</button><button class="mini" onclick="openApplication(${a.id})">Edit</button>${a.url?`<button class="mini" onclick="openUrl(${a.id})">Job link</button>`:""}<button class="mini" onclick="deleteApp(${a.id})">Delete</button></div></div><span class="pill ${statusClass(a.status)}">${esc(a.status)}</span></div>`}
+function openUrl(id){let a=apps.find(x=>x.id===id);if(a?.url)window.open(safeHref(a.url),"_blank","noopener")}
+function renderDashboard(){ $("sTotal").textContent=apps.length;$("sApplied").textContent=apps.filter(a=>a.status==="Applied").length;$("sInterview").textContent=apps.filter(a=>a.status==="Interview").length;$("sOffer").textContent=apps.filter(a=>["Offer","Accepted"].includes(a.status)).length;
+$("dashJobs").innerHTML=apps.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5).map(jobHtml).join("")||'<div class="empty">No applications yet.</div>';
+const statuses=["Saved","Applied","Screening","Interview","Offer","Accepted","Rejected"],max=Math.max(1,...statuses.map(s=>apps.filter(a=>a.status===s).length));$("dashPipeline").innerHTML=statuses.map(s=>{let n=apps.filter(a=>a.status===s).length;return `<div class="pbar"><i style="height:${Math.max(8,n/max*125)}px"></i>${s}<br><b>${n}</b></div>`}).join("");
+const upcoming=apps.filter(a=>a.interview&&new Date(a.interview)>=new Date()).sort((a,b)=>new Date(a.interview)-new Date(b.interview))[0];$("nextInterview").innerHTML=upcoming?`<b>${esc(upcoming.company)}</b><div class="meta">${esc(upcoming.title)}</div><div style="margin-top:7px">${fmtInterview(upcoming.interview)}</div><div class="actions"><button class="mini" onclick="viewDetails(${upcoming.id})">View details</button></div>`:"<span class='sub'>No upcoming interview scheduled.</span>";
+let due=tasks.filter(t=>!t.done).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,3);$("dashTasks").innerHTML=due.length?due.map(t=>`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><b>${esc(appName(t.appId))}</b><div class="meta">${fmtDate(t.date)} · ${esc(t.note)}</div></div>`).join(""):'<div class="sub">No follow-ups due.</div>'}
+function renderApplications(){let q=($("search")?.value||"").toLowerCase(),f=$("statusFilter")?.value||"",s=$("sortFilter")?.value||"new";let list=apps.filter(a=>(!f||a.status===f)&&(!q||(a.company+" "+a.title+" "+a.location+" "+a.notes+" "+a.description).toLowerCase().includes(q)));list.sort((a,b)=>s==="company"?a.company.localeCompare(b.company):s==="old"?new Date(a.date)-new Date(b.date):s==="interview"?new Date(a.interview||"9999")-new Date(b.interview||"9999"):new Date(b.date)-new Date(a.date));$("allJobs").innerHTML=list.map(jobHtml).join("")||'<div class="empty">No applications match your search.</div>'}
+function renderInterviews(){let list=apps.filter(a=>a.interview).sort((a,b)=>new Date(a.interview)-new Date(b.interview));$("interviewList").innerHTML=list.length?`<table class="table"><thead><tr><th>Company</th><th>Role</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>${list.map(a=>`<tr><td><b>${esc(a.company)}</b></td><td>${esc(a.title)}</td><td>${fmtInterview(a.interview)}</td><td><span class="pill ${statusClass(a.status)}">${esc(a.status)}</span></td><td><button class="mini" onclick="viewDetails(${a.id})">Details</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No interviews scheduled.</div>'}
+function renderTasks(){let list=tasks.slice().sort((a,b)=>Number(a.done)-Number(b.done)||new Date(a.date)-new Date(b.date));$("taskList").innerHTML=list.length?list.map(t=>`<div class="job"><div><label><input type="checkbox" ${t.done?"checked":""} onchange="toggleTask(${t.id})"> <b>${esc(appName(t.appId))}</b></label><div class="meta">${fmtDate(t.date)} · ${esc(t.note)}</div></div><button class="mini" onclick="deleteTask(${t.id})">Delete</button></div>`).join(""):'<div class="empty">No follow-ups yet.</div>'}
+function renderCompanies(){let map={};apps.forEach(a=>{let k=a.company||"Unknown";if(!map[k])map[k]={n:0,last:"",statuses:{}};map[k].n++;map[k].last=a.date;map[k].statuses[a.status]=(map[k].statuses[a.status]||0)+1});let rows=Object.entries(map).sort((a,b)=>b[1].n-a[1].n);$("companyList").innerHTML=rows.length?`<table class="table"><thead><tr><th>Company</th><th>Applications</th><th>Latest</th><th>Current status</th></tr></thead><tbody>${rows.map(([k,v])=>{let st=Object.entries(v.statuses).sort((a,b)=>b[1]-a[1])[0][0];return `<tr><td><b>${esc(k)}</b></td><td>${v.n}</td><td>${fmtDate(v.last)}</td><td><span class="pill ${statusClass(st)}">${esc(st)}</span></td></tr>`}).join("")}</tbody></table>`:'<div class="empty">No companies yet.</div>'}
+function renderAnalytics(){let total=apps.length,responded=apps.filter(a=>["Screening","Interview","Offer","Accepted","Rejected"].includes(a.status)).length;$("aMonth").textContent=apps.filter(a=>a.date&&a.date.slice(0,7)===new Date().toISOString().slice(0,7)).length;$("aResponse").textContent=total?Math.round(responded/total*100)+"%":"0%";$("aInterview").textContent=total?Math.round(apps.filter(a=>["Interview","Offer","Accepted"].includes(a.status)).length/total*100)+"%":"0%";$("aOffer").textContent=total?Math.round(apps.filter(a=>["Offer","Accepted"].includes(a.status)).length/total*100)+"%":"0%";const statuses=["Saved","Applied","Screening","Interview","Offer","Accepted","Rejected"],max=Math.max(1,total);$("breakdown").innerHTML=statuses.map(s=>{let n=apps.filter(a=>a.status===s).length;return `<div class="barrow"><span>${s}</span><div class="barline"><i style="width:${n/max*100}%"></i></div><b>${n}</b></div>`}).join("");let loc={};apps.forEach(a=>loc[a.location||"Unknown"]=(loc[a.location||"Unknown"]||0)+1);$("locations").innerHTML=Object.entries(loc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="barrow"><span>${esc(k)}</span><div class="barline"><i style="width:${v/max*100}%"></i></div><b>${v}</b></div>`).join("")||"<div class='empty'>No data.</div>";let months={};apps.forEach(a=>{let m=(a.date||"").slice(0,7)||"Unknown";months[m]=(months[m]||0)+1});$("monthly").innerHTML=Object.entries(months).sort().slice(-6).map(([m,n])=>`<div class="barrow"><span>${m}</span><div class="barline"><i style="width:${n/max*100}%"></i></div><b>${n}</b></div>`).join("")||"<div class='empty'>No data.</div>"}
+function renderDetails(){if(!detailId)return;let a=apps.find(x=>x.id===detailId);if(!a){showView("applications");return}$("detailTitle").textContent=a.title;$("detailCompany").textContent=a.company;$("detailEdit").onclick=()=>openApplication(a.id);$("detailContent").innerHTML=`<div class="notice"><b>Status:</b> <span class="pill ${statusClass(a.status)}">${esc(a.status)}</span> &nbsp; <b>Priority:</b> ${esc(a.priority)} &nbsp; <b>Source:</b> ${esc(a.source)}</div><div class="card"><h3>Job information</h3><div class="detail-grid"><div class="detail-box"><small>Company</small><b>${esc(a.company)}</b></div><div class="detail-box"><small>Job title</small><b>${esc(a.title)}</b></div><div class="detail-box"><small>Location</small>${esc(a.location||"Not specified")}</div><div class="detail-box"><small>Employment type</small>${esc(a.type||"Not specified")}</div><div class="detail-box"><small>Salary</small>${esc(a.salary||"Not specified")}</div><div class="detail-box"><small>Application date</small>${fmtDate(a.date)}</div><div class="detail-box"><small>Interview</small>${fmtInterview(a.interview)}</div><div class="detail-box"><small>Contact</small>${esc(a.contact||"Not specified")}</div><div class="detail-box"><small>Contact email</small>${a.email?`<a class="job-link" href="mailto:${esc(a.email)}">${esc(a.email)}</a>`:"Not specified"}</div><div class="detail-box"><small>Job link</small>${a.url?`<a class="job-link" href="${safeHref(a.url)}" target="_blank" rel="noopener">${esc(a.url)}</a>`:"Not provided"}</div><div class="detail-box full"><small>Job description / requirements</small><div class="detail-notes">${esc(a.description||"Not saved.")}</div></div><div class="detail-box full"><small>Notes</small><div class="detail-notes">${esc(a.notes||"No notes added.")}</div></div></div><div class="actions" style="margin-top:17px"><button class="btn secondary" onclick="openApplication(${a.id})">Edit</button><button class="btn danger" onclick="deleteApp(${a.id})">Delete</button></div></div>`}
+function renderResume(){document.querySelectorAll("[data-check]").forEach(c=>c.checked=localStorage.getItem(c.dataset.check)==="1");$("careerNotes").value=localStorage.getItem("jobtrack_career_notes")||""}
+function isPro(){const exp=localStorage.getItem("jobtrack_pro_expires_at");return localStorage.getItem("jobtrack_plan")==="pro" && (!exp || new Date(exp)>new Date())}
+function applicationLimitReached(){return !isPro() && apps.length>=10}
+async function syncProStatus(showToast=false){
+  if(!window.jobtrackUser || !window.jobtrackSupabase){if(showToast) toast("Sign in first.");return false}
+  try{
+    const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
+    if(!session?.access_token){if(showToast) toast("Please sign in again.");return false}
+    const r=await fetch('/api/account/status',{headers:{Authorization:`Bearer ${session.access_token}`}});
+    const x=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(x.error||'Could not check Pro status');
+    localStorage.setItem('jobtrack_plan',x.pro?'pro':'free');
+    if(x.subscription?.expires_at) localStorage.setItem('jobtrack_pro_expires_at',x.subscription.expires_at); else localStorage.removeItem('jobtrack_pro_expires_at');
+    const el=$("paymentAccountStatus");
+    if(el) el.textContent=x.pro?`⭐ Pro active until ${new Date(x.subscription.expires_at).toLocaleDateString()}.`:'Free plan — choose a Pro plan when you are ready.';
+    renderAll();
+    if(showToast) toast(x.pro?'Pro is active.':'You are on the Free plan.');
+    return x.pro;
+  }catch(e){if(showToast) toast(e.message||'Could not check Pro status.');return false}
+}
+async function startCheckout(plan="monthly"){
+  if(!window.jobtrackUser || !window.jobtrackSupabase){toast("Please sign in first, then try again.");showView("settings");return}
+  try{
+    const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
+    if(!session?.access_token){toast("Please sign in again.");return}
+    const r=await fetch('/api/pesapal/create-order',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({plan})});
+    const x=await r.json().catch(()=>({}));
+    if(!r.ok||!x.redirect_url) throw new Error(x.error||'Could not start payment.');
+    window.location.href=x.redirect_url;
+  }catch(e){toast(e.message||'Could not start payment.');}
+}
+function renderPricing(){const n=$("paymentNotice");if(n)n.textContent=isPro()?`⭐ You are on JobTrack Pro until ${new Date(localStorage.getItem('jobtrack_pro_expires_at')).toLocaleDateString()}.`:'Sign in to your JobTrack account, then choose Monthly or Annual to pay securely with Pesapal.';}
+function renderAll(){renderDashboard();renderApplications();renderInterviews();renderTasks();renderCompanies();renderAnalytics();renderDetails();renderResume();updateThemeButtons();renderPricing();renderProState()}
+function viewDetails(id){detailId=id;showView("details")}
+function openApplication(id=null){editingId=id;let a=id?apps.find(x=>x.id===id):null;$("modalTitle").textContent=a?"Edit Application":"Add Application";$("fCompany").value=a?.company||"";$("fTitle").value=a?.title||"";$("fLocation").value=a?.location||"";$("fType").value=a?.type||"Full-time";$("fSalary").value=a?.salary||"";$("fStatus").value=a?.status||"Applied";$("fDate").value=a?.date||new Date().toISOString().slice(0,10);$("fInterview").value=a?.interview||"";$("fContact").value=a?.contact||"";$("fEmail").value=a?.email||"";$("fUrl").value=a?.url||"";$("fSource").value=a?.source||"Company website";$("fPriority").value=a?.priority||"Normal";$("fDescription").value=a?.description||"";$("fNotes").value=a?.notes||"";$("modal").classList.add("show")}
+function closeModal(){$("modal").classList.remove("show")}
+const PRO_KEYS={plan:"jobtrack_plan",cvs:"jobtrack_cv_versions"};
+function requirePro(){if(isPro())return true;toast("This is a Pro feature. Open Pro to upgrade.");showView("pricing");return false}
+function normalizeText(v){return String(v||"").toLowerCase().replace(/[^a-z0-9\s+#.-]/g," ").replace(/\s+/g," ").trim()}
+function words(v){const stop=new Set(("the and for with from that this are you your our their have has will can was were into about after before using use job role work working team to of in on a an as is be or at by it they we i me my" ).split(" "));return [...new Set(normalizeText(v).split(" ").filter(w=>w.length>=4&&!stop.has(w)))]}
+function skillTerms(v){const common=["customer service","sales","telesales","communication","problem solving","crm","call centre","call center","microsoft office","excel","word","networking","troubleshooting","technical support","it support","ccna","cisco","fiber","cabling","data entry","lead generation","negotiation","time management","teamwork","leadership","english","social media","email","live chat","phone support","cash handling","stock management","inventory","retail"];const n=normalizeText(v);return common.filter(x=>n.includes(x)).concat(words(v).filter(x=>["experience","management","support","customer","service","assistant","agent","sales","network","technical","software","database","marketing"].includes(x))).filter((x,i,a)=>a.indexOf(x)===i)}
+function renderProState(){const badge=$("proBadge"),gate=$("proGate");if(!badge||!gate)return;if(isPro()){badge.textContent="⭐ PRO ACTIVE";gate.innerHTML="<b>You have Pro access.</b> Your Smart Tools are unlocked."}else{badge.textContent="FREE PLAN";gate.innerHTML='<b>Smart Tools are Pro features.</b> Upgrade to unlock Job Match, cover letters, interview prep, smart follow-ups and multiple CV versions. <button class="btn primary" style="margin-left:8px" onclick="showView(\'pricing\')">See Pro plans</button>'}renderCVVersions();renderAdvancedInsights()}
+function runJobMatch(){if(!requirePro())return;const jd=$("aiJobDesc").value.trim(),cv=$("aiResume").value.trim();if(!jd||!cv){toast("Paste both the job description and your CV.");return}const jdWords=new Set(words(jd)),cvWords=new Set(words(cv)),required=[...jdWords],matched=required.filter(w=>cvWords.has(w)),score=Math.max(0,Math.min(100,Math.round(matched.length/Math.max(1,required.length)*100))),jdSkills=skillTerms(jd),cvSkills=skillTerms(cv),skillMatched=jdSkills.filter(x=>cvSkills.includes(x)),missing=jdSkills.filter(x=>!cvSkills.includes(x)),result=$("matchResult");result.hidden=false;result.innerHTML=`<div class="score">${score}%</div><b>Keyword alignment</b><p>${matched.length} of ${required.length} useful keywords found in your CV.</p><div><b>Matched skills</b><br>${skillMatched.length?skillMatched.map(x=>`<span class="tag">${esc(x)}</span>`).join(""):"<span class='sub'>No obvious skill matches found.</span>"}</div><div style="margin-top:10px"><b>Skills to review</b><br>${missing.length?missing.slice(0,12).map(x=>`<span class="tag">${esc(x)}</span>`).join(""):"<span class='good'>No obvious skill gaps detected.</span>"}</div><p class="sub" style="margin-top:10px">This is a keyword-alignment check, not a guarantee of ATS or hiring results.</p>`}
+function generateCoverLetter(){if(!requirePro())return;const name=$("coverName").value.trim()||"Applicant",company=$("coverCompany").value.trim()||"the company",role=$("coverRole").value.trim()||"the position",strength=$("coverStrength").value.trim()||"customer service and problem-solving",desc=$("coverDesc").value.trim(),skill=skillTerms(desc).slice(0,5),text=`Dear Hiring Manager,\n\nI am writing to apply for the ${role} position at ${company}. I bring practical experience in ${strength}, and I am comfortable communicating with customers, understanding their needs, and solving problems professionally.\n\nI am particularly interested in this opportunity because my background matches the needs of the role${skill.length?`, including areas such as ${skill.join(", ")}`:""}. I am dependable, willing to learn, and focused on delivering a positive experience while meeting team goals.\n\nI would welcome the opportunity to discuss how my experience could contribute to ${company}. Thank you for considering my application.\n\nKind regards,\n${name}`;const el=$("coverResult");el.hidden=false;el.innerHTML=`<div style="white-space:pre-wrap;line-height:1.6">${esc(text)}</div>`;el.dataset.copy=text}
+function generateInterviewPrep(){if(!requirePro())return;const role=$("prepRole").value.trim()||"this role",company=$("prepCompany").value.trim()||"the company",desc=$("prepDesc").value.trim(),skills=skillTerms(desc),qs=[`Tell me about yourself and why you want the ${role} role.`,`Why do you want to work for ${company}?`,`What experience do you have that is most relevant to this role?`,`Tell me about a time you solved a difficult customer or work problem.`,`How do you handle pressure, targets, or competing priorities?`,`What would you do if you did not know how to solve a customer's problem?`,`Why should we hire you for this position?`];if(skills.includes("sales")||skills.includes("telesales"))qs.push("How would you handle a prospect who says they are not interested?");if(skills.includes("technical support")||skills.includes("it support")||skills.includes("networking"))qs.push("Walk me through how you would troubleshoot a technical issue.");const text=`Interview preparation for ${role} at ${company}\n\nLIKELY QUESTIONS\n${qs.map((q,i)=>`${i+1}. ${q}`).join("\n")}\n\nPREPARE THESE STORIES\n• A difficult problem you solved\n• A customer you helped successfully\n• A target or result you achieved\n• A mistake you learned from\n• A time you worked under pressure\n\nROLE KEYWORDS\n${skills.length?skills.join(", "):"Review the job description and identify its repeated skills."}`;const el=$("prepResult");el.hidden=false;el.innerHTML=`<div style="white-space:pre-wrap;line-height:1.6">${esc(text)}</div>`;el.dataset.copy=text}
+function generateFollowup(){if(!requirePro())return;const name=$("followName").value.trim()||"Applicant",company=$("followCompany").value.trim()||"the team",role=$("followRole").value.trim()||"the position",days=$("followDays").value||"7",text=`Hello,\n\nI hope you're doing well. I’m following up regarding my application for the ${role} position at ${company}. It has been about ${days} days since I applied, and I wanted to check whether there are any updates on the process.\n\nI remain very interested in the opportunity and would be happy to provide any additional information you may need.\n\nThank you for your time.\n\nKind regards,\n${name}`;const el=$("followResult");el.hidden=false;el.innerHTML=`<div style="white-space:pre-wrap;line-height:1.6">${esc(text)}</div>`;el.dataset.copy=text}
+async function copyText(id){const el=$(id);if(!el||el.hidden)return;const text=el.dataset.copy||el.innerText||"";try{await navigator.clipboard.writeText(text);toast("Copied.")}catch{toast("Copy failed. Select the text and copy it.")}}
+function loadCVVersions(){return loadJSON(PRO_KEYS.cvs,[])}
+function saveCVVersion(){if(!requirePro())return;const name=$("cvName").value.trim(),role=$("cvRole").value.trim(),text=$("cvText").value.trim();if(!name||!text){toast("Enter a version name and CV text.");return}const list=loadCVVersions();list.unshift({id:Date.now(),name,role,text,updated:new Date().toISOString()});localStorage.setItem(PRO_KEYS.cvs,JSON.stringify(list.slice(0,10)));$("cvName").value="";$("cvRole").value="";$("cvText").value="";renderCVVersions();cloudSaveSnapshot();toast("CV version saved.")}
+function deleteCV(id){const list=loadCVVersions().filter(x=>x.id!==id);localStorage.setItem(PRO_KEYS.cvs,JSON.stringify(list));renderCVVersions();cloudSaveSnapshot()}
+function renderCVVersions(){const el=$("cvList");if(!el)return;const list=loadCVVersions();if(!list.length){el.innerHTML="<div class='sub'>No CV versions saved yet.</div>";return}el.innerHTML=list.map(x=>`<div class="cv-item"><div><b>${esc(x.name)}</b><div class="meta">${esc(x.role||"No target role")} · ${fmtDate((x.updated||"").slice(0,10))}</div></div><button class="mini" onclick="deleteCV(${x.id})">Delete</button></div>`).join("")}
+function renderAdvancedInsights(){const el=$("advancedInsights");if(!el)return;if(!isPro()){el.innerHTML="Upgrade to Pro to unlock advanced job-search insights.";return}const bySource={};apps.forEach(a=>{const k=a.source||"Other";if(!bySource[k])bySource[k]={apps:0,interviews:0};bySource[k].apps++;if(["Interview","Offer","Accepted"].includes(a.status))bySource[k].interviews++});const rows=Object.entries(bySource).sort((a,b)=>b[1].apps-a[1].apps);el.innerHTML=rows.length?rows.map(([k,v])=>`<div class="barrow"><span>${esc(k)}</span><div class="barline"><i style="width:${Math.min(100,Math.round(v.interviews/Math.max(1,v.apps)*100))}%"></i></div><b>${Math.round(v.interviews/Math.max(1,v.apps)*100)}%</b></div>`).join(""):"Add applications to see insights."}
+function saveApplication(){let company=$("fCompany").value.trim(),title=$("fTitle").value.trim();if(!company||!title){toast("Company and job title are required.");return}if(!editingId && applicationLimitReached()){toast("Free plan limit reached. Upgrade to Pro for unlimited applications.");showView("pricing");return}let data={id:editingId||Date.now(),company,title,location:$("fLocation").value.trim(),type:$("fType").value,salary:$("fSalary").value.trim(),status:$("fStatus").value,date:$("fDate").value||new Date().toISOString().slice(0,10),interview:$("fInterview").value,contact:$("fContact").value.trim(),email:$("fEmail").value.trim(),url:$("fUrl").value.trim(),source:$("fSource").value,priority:$("fPriority").value,description:$("fDescription").value.trim(),notes:$("fNotes").value.trim()};if(editingId){apps=apps.map(a=>a.id===editingId?data:a);toast("Application updated.")}else{apps.unshift(data);toast("Application added.")}persist();closeModal();renderAll()}
+function deleteApp(id){if(confirm("Delete this application?")){apps=apps.filter(a=>a.id!==id);tasks=tasks.filter(t=>t.appId!==id);if(detailId===id){detailId=null;showView("applications")}persist();renderAll();toast("Application deleted.")}}
+function addTask(){let opts=apps.map(a=>`<option value="${a.id}">${esc(a.company)} — ${esc(a.title)}</option>`).join("");$("tApp").innerHTML=opts||"<option value=''>No applications</option>";$("tDate").value=new Date().toISOString().slice(0,10);$("tNote").value="";$("taskModal").classList.add("show")}
+function closeTask(){$("taskModal").classList.remove("show")}
+function saveTask(){let appId=Number($("tApp").value);if(!appId){toast("Add an application first.");return}tasks.push({id:Date.now(),appId,date:$("tDate").value||new Date().toISOString().slice(0,10),note:$("tNote").value.trim()||"Follow up",done:false});persist();closeTask();renderAll();toast("Follow-up added.")}
+function toggleTask(id){let t=tasks.find(x=>x.id===id);if(t)t.done=!t.done;persist();renderAll()}
+function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);persist();renderAll();toast("Follow-up deleted.")}
+function appName(id){let a=apps.find(x=>x.id===id);return a?a.company+" — "+a.title:"Deleted application"}
+function resetData(){if(confirm("Reset applications and follow-ups to demo data?")){apps=demoApps.map(x=>({...x}));tasks=[];persist();renderAll();toast("Demo data restored.")}}
+function exportData(){let out={version:3,exportedAt:new Date().toISOString(),applications:apps,tasks,theme:localStorage.getItem("jobtrack_theme")||"blue",careerNotes:localStorage.getItem("jobtrack_career_notes")||""};let blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="jobtrack-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importData(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);let imported=Array.isArray(x)?x:x.applications;if(!Array.isArray(imported))throw Error();apps=imported.map(normalizeApp);tasks=Array.isArray(x.tasks)?x.tasks:[];if(x.theme)setTheme(x.theme);if(typeof x.careerNotes==="string")localStorage.setItem("jobtrack_career_notes",x.careerNotes);persist();renderAll();toast("Backup imported.")}catch{toast("Invalid JobTrack backup.")}};r.readAsText(file);e.target.value=""}
+function normalizeApp(a){let statuses=["Saved","Applied","Screening","Interview","Offer","Accepted","Rejected"];return{id:a.id||Date.now()+Math.random(),company:String(a.company||"").trim(),title:String(a.title||"").trim(),location:String(a.location||""),type:String(a.type||"Full-time"),salary:String(a.salary||""),status:statuses.includes(a.status)?a.status:"Applied",date:a.date||new Date().toISOString().slice(0,10),interview:a.interview||"",contact:String(a.contact||""),email:String(a.email||""),url:String(a.url||""),source:String(a.source||"Other"),priority:["Low","Normal","High"].includes(a.priority)?a.priority:"Normal",description:String(a.description||""),notes:String(a.notes||"")}}
+function setTheme(t){let allowed=["blue","green","purple","orange","dark"];if(!allowed.includes(t))t="blue";document.documentElement.dataset.theme=t==="blue"?"":t;localStorage.setItem("jobtrack_theme",t);updateThemeButtons()}
+function updateThemeButtons(){let t=localStorage.getItem("jobtrack_theme")||"blue";document.querySelectorAll(".theme").forEach(b=>b.classList.toggle("active",b.dataset.theme===t))}
+function saveCareerNotes(){localStorage.setItem("jobtrack_career_notes",$("careerNotes").value);toast("Career notes saved.")}
+document.querySelectorAll("[data-check]").forEach(c=>c.addEventListener("change",()=>localStorage.setItem(c.dataset.check,c.checked?"1":"0")));
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});$("taskModal").addEventListener("click",e=>{if(e.target.id==="taskModal")closeTask()});
+(function(){setTheme(localStorage.getItem("jobtrack_theme")||"blue");let h=new Date().getHours();$("greeting").textContent=(h<12?"Good morning":h<18?"Good afternoon":"Good evening")+", Oscar 👋";renderAll()})();
+function toast(s){$("toast").textContent=s;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),2200)}
+
+/* ---------------- JobTrack Cloud Sync ---------------- */
+const CLOUD_CFG_KEY = "jobtrack_supabase_config";
+window.jobtrackCloudReady = false;
+window.jobtrackUser = null;
+window.jobtrackSupabase = null;
+
+function getCloudConfig(){
+  try { return JSON.parse(localStorage.getItem(CLOUD_CFG_KEY) || "null"); } catch { return null; }
+}
+function setCloudStatus(msg){
+  const el = document.getElementById("cloudStatus");
+  if(el) el.textContent = msg;
+}
+function openAuth(){
+  if(!getCloudConfig()){ setCloudStatus("Enter and save your Supabase URL and anon key first."); return; }
+  $("authModal").classList.add("show");
+}
+function closeAuth(){ $("authModal").classList.remove("show"); }
+function authMsg(msg){ const el=$("authMessage"); if(el) el.textContent=msg; }
+
+async function refreshPlanFromCloud(){
+  if(!window.jobtrackCloudReady || !window.jobtrackUser) return;
+  const {data,error}=await window.jobtrackSupabase.from("jobtrack_subscriptions").select("plan,status,expires_at").eq("user_id",window.jobtrackUser.id).maybeSingle();
+  if(error) return;
+  const active=data && data.status==="active" && (!data.expires_at || new Date(data.expires_at)>new Date());
+  localStorage.setItem("jobtrack_plan",active?"pro":"free");
+  renderPricing();
+}
+async function initCloud(){
+  const cfg=getCloudConfig();
+  if(!cfg?.url || !cfg?.key || !window.supabase){
+    window.jobtrackCloudReady=false;
+    setCloudStatus("Local mode — cloud connection not configured.");
+    return;
+  }
+  try{
+    window.jobtrackSupabase=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    window.jobtrackCloudReady=true;
+    const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
+    window.jobtrackUser=session?.user || null;
+    updateCloudUI();
+    if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
+    window.jobtrackSupabase.auth.onAuthStateChange(async (_event,session)=>{
+      window.jobtrackUser=session?.user || null;
+      updateCloudUI();
+      if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
+    });
+  }catch(e){
+    window.jobtrackCloudReady=false;
+    setCloudStatus("Cloud setup error: "+(e.message||e));
+  }
+}
+function updateCloudUI(){
+  const cfg=getCloudConfig();
+  const status=window.jobtrackUser
+    ? "☁️ Signed in as "+window.jobtrackUser.email+" — cloud sync is active."
+    : (cfg?.url ? "Cloud connected — sign in to enable sync." : "Local mode — cloud connection not configured.");
+  setCloudStatus(status);
+}
+async function saveCloudConfig(){
+  const url=$("sbUrl").value.trim().replace(/\/$/,"");
+  const key=$("sbKey").value.trim();
+  if(!/^https:\/\/.+\.supabase\.co(mp)?$/i.test(url) && !/^https:\/\/.+/.test(url)){
+    toast("Enter a valid Supabase project URL."); return;
+  }
+  if(key.length<20){ toast("Enter your Supabase anon/public key."); return; }
+  localStorage.setItem(CLOUD_CFG_KEY,JSON.stringify({url,key}));
+  toast("Cloud connection saved.");
+  await initCloud();
+}
+function fillCloudConfig(){
+  const cfg=getCloudConfig();
+  if(cfg){ $("sbUrl").value=cfg.url||""; $("sbKey").value=cfg.key||""; }
+}
+async function signUpCloud(){
+  if(!window.jobtrackSupabase){ authMsg("Save your Supabase connection first."); return; }
+  const email=$("authEmail").value.trim(), password=$("authPassword").value;
+  if(!email || password.length<6){ authMsg("Enter a valid email and a password of at least 6 characters."); return; }
+  authMsg("Creating account...");
+  const {data,error}=await window.jobtrackSupabase.auth.signUp({email,password});
+  if(error){ authMsg(error.message); return; }
+  if(data.session) authMsg("Account created and signed in.");
+  else authMsg("Account created. Check your email if email confirmation is enabled in Supabase.");
+}
+async function signInCloud(){
+  if(!window.jobtrackSupabase){ authMsg("Save your Supabase connection first."); return; }
+  const email=$("authEmail").value.trim(), password=$("authPassword").value;
+  if(!email || !password){ authMsg("Enter your email and password."); return; }
+  authMsg("Signing in...");
+  const {error}=await window.jobtrackSupabase.auth.signInWithPassword({email,password});
+  if(error){ authMsg(error.message); return; }
+  authMsg("Signed in. Syncing your data...");
+}
+async function signOutCloud(){
+  if(!window.jobtrackSupabase){ toast("Cloud is not configured."); return; }
+  await window.jobtrackSupabase.auth.signOut();
+  window.jobtrackUser=null;
+  updateCloudUI();
+  toast("Signed out. Local data remains on this browser.");
+}
+function snapshot(){
+  return {
+    version:4,
+    applications:apps,
+    tasks:tasks,
+    theme:localStorage.getItem("jobtrack_theme")||"blue",
+    careerNotes:localStorage.getItem("jobtrack_career_notes")||"",
+    plan:localStorage.getItem("jobtrack_plan")||"free",
+    cvVersions:loadCVVersions(),
+    resumeChecks:{
+      resume1:localStorage.getItem("resume1")==="1",
+      resume2:localStorage.getItem("resume2")==="1",
+      resume3:localStorage.getItem("resume3")==="1",
+      resume4:localStorage.getItem("resume4")==="1",
+      resume5:localStorage.getItem("resume5")==="1"
+    }
+  };
+}
+async function cloudSaveSnapshot(){
+  if(!window.jobtrackCloudReady || !window.jobtrackUser) return;
+  const {error}=await window.jobtrackSupabase.from("jobtrack_data").upsert({
+    user_id:window.jobtrackUser.id,
+    data:snapshot(),
+    updated_at:new Date().toISOString()
+  },{onConflict:"user_id"});
+  if(error) setCloudStatus("Cloud sync error: "+error.message);
+  else setCloudStatus("☁️ Synced just now — "+window.jobtrackUser.email);
+}
+async function cloudLoadSnapshot(){
+  if(!window.jobtrackCloudReady || !window.jobtrackUser) return;
+  setCloudStatus("☁️ Loading your cloud data...");
+  const {data,error}=await window.jobtrackSupabase.from("jobtrack_data").select("data").eq("user_id",window.jobtrackUser.id).maybeSingle();
+  if(error){ setCloudStatus("Cloud load error: "+error.message); return; }
+  if(!data?.data){
+    await cloudSaveSnapshot();
+    return;
+  }
+  const x=data.data;
+  if(Array.isArray(x.applications)) apps=x.applications.map(normalizeApp);
+  if(Array.isArray(x.tasks)) tasks=x.tasks;
+  if(x.theme) setTheme(x.theme);
+  if(x.plan) localStorage.setItem("jobtrack_plan",x.plan);
+  if(Array.isArray(x.cvVersions)) localStorage.setItem(PRO_KEYS.cvs,JSON.stringify(x.cvVersions));
+  if(typeof x.careerNotes==="string") localStorage.setItem("jobtrack_career_notes",x.careerNotes);
+  if(x.resumeChecks) Object.entries(x.resumeChecks).forEach(([k,v])=>localStorage.setItem(k,v?"1":"0"));
+  localStorage.setItem(KEY,JSON.stringify(apps));
+  localStorage.setItem("jobtrack_v3_tasks",JSON.stringify(tasks));
+  if($("careerNotes")) $("careerNotes").value=localStorage.getItem("jobtrack_career_notes")||"";
+  document.querySelectorAll("[data-check]").forEach(c=>c.checked=localStorage.getItem(c.dataset.check)==="1");
+  renderAll();
+  setCloudStatus("☁️ Loaded from cloud — "+window.jobtrackUser.email);
+}
+document.querySelectorAll("[data-check]").forEach(c=>{
+  c.addEventListener("change",()=>{ localStorage.setItem(c.dataset.check,c.checked?"1":"0"); if(window.jobtrackUser) cloudSaveSnapshot(); });
+});
+$("authModal").addEventListener("click",e=>{if(e.target.id==="authModal")closeAuth()});
+setTimeout(async()=>{
+  fillCloudConfig();
+  await initCloud();
+  const payment=new URLSearchParams(location.search).get('payment');
+  if(payment==='success') toast('Payment received. Checking your Pro access...');
+  if(payment==='failed') toast('Payment was not completed.');
+  if(payment==='pending') toast('Payment is still pending.');
+  if(payment==='cancelled') toast('Payment cancelled.');
+  if(payment) history.replaceState({},'',location.pathname);
+  if(window.jobtrackUser) await syncProStatus();
+},0);
+
+</script>
+</body></html>

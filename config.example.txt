@@ -1,0 +1,4 @@
+# JobTrack Cloud setup
+# This file is documentation only. V4 stores the values in the app's Settings screen.
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_OR_PUBLIC_KEY
