@@ -42,7 +42,9 @@ async function pesapalToken() {
     })
   });
   const data = await r.json().catch(() => ({}));
-  if (!r.ok || !data.token) throw new Error(data.message || 'Pesapal authentication failed');
+ if (!r.ok || !data.token) {
+  throw new Error(JSON.stringify(data));
+}
   return { token: data.token, base };
 }
 
