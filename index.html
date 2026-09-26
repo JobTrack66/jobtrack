@@ -375,7 +375,9 @@ async function signInCloud(){
   authMsg("Signing in...");
   const {error}=await window.jobtrackSupabase.auth.signInWithPassword({email,password});
   if(error){ authMsg(error.message); return; }
+
   authMsg("Signed in. Syncing your data...");
+  closeAuth();
 }
 async function signOutCloud(){
   if(!window.jobtrackSupabase){ toast("Cloud is not configured."); return; }
