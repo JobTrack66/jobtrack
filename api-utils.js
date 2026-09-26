@@ -30,7 +30,7 @@ async function supabaseRest(path, options = {}) {
 }
 
 async function pesapalToken() {
-  const base = (process.env.PESAPAL_ENV === 'live'
+  const base = (process.env.PESAPAL_ENVIRONMENT === 'live'
     ? 'https://pay.pesapal.com/v3'
     : 'https://cybqa.pesapal.com/pesapalv3').replace(/\/$/, '');
   const r = await fetch(`${base}/api/Auth/RequestToken`, {
