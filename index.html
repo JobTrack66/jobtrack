@@ -242,7 +242,7 @@ async function startCheckout(plan="monthly"){
   }catch(e){
     toast(e.message || 'Could not start payment.');
   }
-}}
+}
 function renderPricing(){const n=$("paymentNotice");if(n)n.textContent=isPro()?`⭐ You are on JobTrack Pro until ${new Date(localStorage.getItem('jobtrack_pro_expires_at')).toLocaleDateString()}.`:'Sign in to your JobTrack account, then choose Monthly or Annual to pay securely with Pesapal.';}
 function renderAll(){renderDashboard();renderApplications();renderInterviews();renderTasks();renderCompanies();renderAnalytics();renderDetails();renderResume();updateThemeButtons();renderPricing();renderProState()}
 function viewDetails(id){detailId=id;showView("details")}
