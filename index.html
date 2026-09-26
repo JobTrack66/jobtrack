@@ -186,7 +186,8 @@ function renderResume(){document.querySelectorAll("[data-check]").forEach(c=>c.c
 function isPro(){const exp=localStorage.getItem("jobtrack_pro_expires_at");return localStorage.getItem("jobtrack_plan")==="pro" && (!exp || new Date(exp)>new Date())}
 function applicationLimitReached(){return !isPro() && apps.length>=10}
 async function syncProStatus(showToast=false){
-    if(!window.jobtrackSupabase){if(showToast) toast("Sign in first.");return false}
+ if(!window.jobtrackSupabase) await initCloud();
+  if(!window.jobtrackSupabase){if(showToast) toast("Sign in first.");return false}
   try{
     const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
     if(!session?.access_token){if(showToast) toast("Please sign in again.");return false}
