@@ -203,16 +203,46 @@ async function syncProStatus(showToast=false){
   }catch(e){if(showToast) toast(e.message||'Could not check Pro status.');return false}
 }
 async function startCheckout(plan="monthly"){
-  if(!window.jobtrackUser || !window.jobtrackSupabase){toast("Please sign in first, then try again.");showView("settings");return}
+  if(!window.jobtrackSupabase){
+    toast("Cloud is not configured.");
+    showView("settings");
+    return;
+  }
+
   try{
-    const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
-    if(!session?.access_token){toast("Please sign in again.");return}
-    const r=await fetch('/api/pesapal/create-order',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({plan})});
+    const {data:{session},error}=await window.jobtrackSupabase.auth.getSession();
+
+    if(error || !session?.user || !session?.access_token){
+      window.jobtrackUser=null;
+      updateCloudUI();
+      toast("Please sign in again, then try again.");
+      showView("settings");
+      return;
+    }
+
+    window.jobtrackUser=session.user;
+    updateCloudUI();
+
+    const r=await fetch('/api/pesapal/create-order',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        Authorization:`Bearer ${session.access_token}`
+      },
+      body:JSON.stringify({plan})
+    });
+
     const x=await r.json().catch(()=>({}));
-    if(!r.ok||!x.redirect_url) throw new Error(x.error||'Could not start payment.');
+
+    if(!r.ok || !x.redirect_url){
+      throw new Error(x.error || 'Could not start payment.');
+    }
+
     window.location.href=x.redirect_url;
-  }catch(e){toast(e.message||'Could not start payment.');}
-}
+  }catch(e){
+    toast(e.message || 'Could not start payment.');
+  }
+}}
 function renderPricing(){const n=$("paymentNotice");if(n)n.textContent=isPro()?`⭐ You are on JobTrack Pro until ${new Date(localStorage.getItem('jobtrack_pro_expires_at')).toLocaleDateString()}.`:'Sign in to your JobTrack account, then choose Monthly or Annual to pay securely with Pesapal.';}
 function renderAll(){renderDashboard();renderApplications();renderInterviews();renderTasks();renderCompanies();renderAnalytics();renderDetails();renderResume();updateThemeButtons();renderPricing();renderProState()}
 function viewDetails(id){detailId=id;showView("details")}
