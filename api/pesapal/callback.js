@@ -18,7 +18,14 @@ async function handle(req, res) {
       }
       return res.redirect('/?payment=success');
     }
-    if (Number(status.status_code) === 2 || Number(status.status_code) === 3 || Number(status.status_code) === 0) return res.redirect('/?payment=failed');
+   if (Number(status.status_code) === 2 || Number(status.status_code) === 3 || Number(status.status_code) === 0) {
+  await supabaseRest(`jobtrack_payment_intents?merchant_reference=eq.${encodeURIComponent(reference)}`, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({ status: 'failed', updated_at: new Date().toISOString() })
+  });
+  return res.redirect('/?payment=failed');
+}
     return res.redirect('/?payment=pending');
   } catch (e) {
     return res.redirect('/?payment=error');
