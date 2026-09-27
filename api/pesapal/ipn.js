@@ -14,7 +14,12 @@ module.exports = async function handler(req, res) {
       const intent = rows[0];
       if (intent) { await activatePro({ userId: intent.user_id, plan: intent.plan, merchantReference: reference, trackingId, amount: intent.amount }); await supabaseRest(`jobtrack_payment_intents?merchant_reference=eq.${encodeURIComponent(reference)}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ status: 'completed', tracking_id: trackingId, updated_at: new Date().toISOString() }) }); }
     }
-    return res.status(200).json({ received: true });
+    return res.status(200).json({
+  orderNotificationType: q.OrderNotificationType || q.orderNotificationType || 'IPNCHANGE',
+  orderTrackingId: trackingId,
+  orderMerchantReference: reference,
+  status: 200
+});
   } catch (e) {
     return res.status(500).json({ error: e.message || 'IPN processing failed' });
   }
