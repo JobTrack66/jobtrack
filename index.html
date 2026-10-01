@@ -310,8 +310,6 @@ async function refreshPlanFromCloud(){
   const {data,error}=await window.jobtrackSupabase.from("jobtrack_subscriptions").select("plan,status,expires_at").eq("user_id",window.jobtrackUser.id).maybeSingle();
   if(error){ console.error("Subscription error:", error); toast("Subscription check error: "+error.message); return; }
   const active=data && data.status==="active" && (!data.expires_at || new Date(data.expires_at)>new Date());
-console.log("JOBTRACK PRO DEBUG", { userId: window.jobtrackUser?.id, subscription: data, active, now: new Date().toISOString() });
-toast(data ? `Subscription: ${data.plan} / ${data.status}` : "No subscription found for this account");
   localStorage.setItem("jobtrack_plan",active?"pro":"free");
   renderPricing();
 }
