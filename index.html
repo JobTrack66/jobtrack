@@ -308,7 +308,7 @@ function authMsg(msg){ const el=$("authMessage"); if(el) el.textContent=msg; }
 async function refreshPlanFromCloud(){
   if(!window.jobtrackCloudReady || !window.jobtrackUser) return;
   const {data,error}=await window.jobtrackSupabase.from("jobtrack_subscriptions").select("plan,status,expires_at").eq("user_id",window.jobtrackUser.id).maybeSingle();
-  if(error) return;
+  if(error){ console.error("Subscription error:", error); toast("Subscription check error: "+error.message); return; }
   const active=data && data.status==="active" && (!data.expires_at || new Date(data.expires_at)>new Date());
   localStorage.setItem("jobtrack_plan",active?"pro":"free");
   renderPricing();
