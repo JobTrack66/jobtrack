@@ -358,6 +358,12 @@ async function initCloud(){
   }
   try{
     window.jobtrackSupabase=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    window.jobtrackSupabase.auth.onAuthStateChange((event, session) => {
+  if(event === "PASSWORD_RECOVERY"){
+    $("resetPasswordModal").classList.add("show");
+    $("authModal").classList.remove("show");
+  }
+});
     window.jobtrackCloudReady=true;
 const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
 
@@ -370,15 +376,14 @@ if(hash.includes("type=recovery")){
 window.jobtrackUser=session?.user || null;
 updateCloudUI();
     if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
-    window.jobtrackSupabase.auth.onAuthStateChange(async (event,session)=>{
-      if(event === "PASSWORD_RECOVERY"){
-  $("resetPasswordModal").classList.add("show");
-  $("authModal").classList.remove("show");
-}
-      window.jobtrackUser=session?.user || null;
-      updateCloudUI();
-      if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
-    });
+    window.jobtrackSupabase.auth.onAuthStateChange(async (_event,session)=>{
+  window.jobtrackUser=session?.user || null;
+  updateCloudUI();
+  if(window.jobtrackUser){
+    await cloudLoadSnapshot();
+    await refreshPlanFromCloud();
+  }
+});
   }catch(e){
     window.jobtrackCloudReady=false;
     setCloudStatus("Cloud setup error: "+(e.message||e));
