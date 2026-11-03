@@ -329,7 +329,7 @@ async function initCloud(){
     window.jobtrackUser=session?.user || null;
     updateCloudUI();
     if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
-    window.jobtrackSupabase.auth.onAuthStateChange(async (_event,session)=>{
+    window.jobtrackSupabase.auth.onAuthStateChange(async (event,session)=>{
       window.jobtrackUser=session?.user || null;
       updateCloudUI();
       if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
