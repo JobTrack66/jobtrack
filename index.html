@@ -371,6 +371,10 @@ window.jobtrackUser=session?.user || null;
 updateCloudUI();
     if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
     window.jobtrackSupabase.auth.onAuthStateChange(async (event,session)=>{
+      if(event === "PASSWORD_RECOVERY"){
+  $("resetPasswordModal").classList.add("show");
+  $("authModal").classList.remove("show");
+}
       window.jobtrackUser=session?.user || null;
       updateCloudUI();
       if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
