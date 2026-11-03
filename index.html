@@ -111,7 +111,30 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:
 <section id="details" class="view"><div class="top"><div><h1 id="detailTitle">Job Details</h1><div class="sub" id="detailCompany"></div></div><div class="actions"><button class="btn ghost" onclick="showView('applications')">← Back</button><button class="btn secondary" id="detailEdit">Edit</button></div></div><div id="detailContent"></div></section>
 </main></div>
 
+<div class="modal" id="resetPasswordModal">
+  <div class="dialog">
+    <h2>Reset Your Password</h2>
+    <p class="sub">Enter your new password below.</p>
 
+    <div class="form">
+      <div class="field">
+        <label>New Password</label>
+        <input class="input" id="newPassword" type="password" placeholder="At least 6 characters">
+      </div>
+
+      <div class="field">
+        <label>Confirm New Password</label>
+        <input class="input" id="confirmNewPassword" type="password" placeholder="Confirm your password">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" onclick="saveNewPassword()">Save New Password</button>
+    </div>
+
+    <div id="resetPasswordMessage" class="sub" style="margin-top:12px"></div>
+  </div>
+</div>
 <div class="modal" id="authModal">
   <div class="dialog">
     <h2>JobTrack Cloud Account</h2>
@@ -192,6 +215,17 @@ async function syncProStatus(showToast=false){
   if(!window.jobtrackSupabase){if(showToast) toast("Sign in first.");return false}
   try{
     const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
+    const hash = window.location.hash;
+  
+    if(hash.includes("type=recovery")){
+      $("resetPasswordModal").classList.add("show");
+      $("authModal").classList.remove("show");
+    }
+
+if(hash.includes("type=recovery")){
+  $("resetPasswordModal").classList.add("show");
+  $("authModal").classList.remove("show");
+}
     if(!session?.access_token){if(showToast) toast("Please sign in again.");return false}
     const r=await fetch('/api/account/status',{headers:{Authorization:`Bearer ${session.access_token}`}});
     const x=await r.json().catch(()=>({}));
@@ -325,9 +359,16 @@ async function initCloud(){
   try{
     window.jobtrackSupabase=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     window.jobtrackCloudReady=true;
-    const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
-    window.jobtrackUser=session?.user || null;
-    updateCloudUI();
+const {data:{session}}=await window.jobtrackSupabase.auth.getSession();
+
+const hash = window.location.hash;
+if(hash.includes("type=recovery")){
+  $("resetPasswordModal").classList.add("show");
+  $("authModal").classList.remove("show");
+}
+
+window.jobtrackUser=session?.user || null;
+updateCloudUI();
     if(window.jobtrackUser){ await cloudLoadSnapshot(); await refreshPlanFromCloud(); }
     window.jobtrackSupabase.auth.onAuthStateChange(async (event,session)=>{
       window.jobtrackUser=session?.user || null;
@@ -407,6 +448,47 @@ async function signInCloud(){
   }
 
   authMsg("Password reset link sent. Check your email.");
+}
+  async function saveNewPassword(){
+  const password = $("newPassword").value;
+  const confirmPassword = $("confirmNewPassword").value;
+  const message = $("resetPasswordMessage");
+
+  if(!window.jobtrackSupabase){
+    message.textContent = "Supabase is not connected.";
+    return;
+  }
+
+  if(!password || password.length < 6){
+    message.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  if(password !== confirmPassword){
+    message.textContent = "Passwords do not match.";
+    return;
+  }
+
+  message.textContent = "Updating password...";
+
+  const { error } = await window.jobtrackSupabase.auth.updateUser({
+    password: password
+  });
+
+  if(error){
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent = "Password updated successfully!";
+
+  $("newPassword").value = "";
+  $("confirmNewPassword").value = "";
+
+  setTimeout(() => {
+    $("resetPasswordModal").classList.remove("show");
+    $("authModal").classList.add("show");
+  }, 2000);
 }
 async function signOutCloud(){
   if(!window.jobtrackSupabase){ toast("Cloud is not configured."); return; }
