@@ -119,7 +119,9 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:
     <div class="form">
       <div class="field"><label>Email</label><input class="input" id="authEmail" type="email" placeholder="you@example.com"></div>
       <div class="field"><label>Password</label><input class="input" id="authPassword" type="password" placeholder="At least 6 characters"></div>
-    </div>
+    </div><div style="text-align:right;margin-top:8px">
+  <button class="btn ghost" onclick="resetPasswordEmail()">Forgot password?</button>
+</div>
     <div class="actions" style="margin-top:14px">
       <button class="btn primary" onclick="signInCloud()">Sign in</button>
       <button class="btn secondary" onclick="signUpCloud()">Create account</button>
@@ -379,6 +381,32 @@ async function signInCloud(){
 
   authMsg("Signed in. Syncing your data...");
   closeAuth();
+}
+  async function resetPasswordEmail(){
+  if(!window.jobtrackSupabase){
+    authMsg("Save your Supabase connection first.");
+    return;
+  }
+
+  const email = $("authEmail").value.trim();
+
+  if(!email){
+    authMsg("Enter your email address first.");
+    return;
+  }
+
+  authMsg("Sending password reset email...");
+
+  const { error } = await window.jobtrackSupabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + "/"
+  });
+
+  if(error){
+    authMsg(error.message);
+    return;
+  }
+
+  authMsg("Password reset link sent. Check your email.");
 }
 async function signOutCloud(){
   if(!window.jobtrackSupabase){ toast("Cloud is not configured."); return; }
