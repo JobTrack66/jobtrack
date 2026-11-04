@@ -29,7 +29,11 @@ module.exports = async function handler(req, res) {
         description: p.name,
         callback_url: `${origin}/api/pesapal/callback`,
         cancellation_url: `${origin}/?payment=cancelled`,
-        notification_id: env('PESAPAL_IPN_ID'),
+      notification_id: env(
+  process.env.VERCEL_ENV === 'preview'
+    ? 'PESAPAL_SANDBOX_IPN_ID'
+    : 'PESAPAL_IPN_ID'
+),
         billing_address: {
           email_address: user.email,
           country_code: 'UG',
