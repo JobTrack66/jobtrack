@@ -8,7 +8,9 @@ module.exports = async function handler(req, res) {
 
     const plan = req.body?.plan === 'yearly' ? 'yearly' : 'monthly';
     const p = planDetails(plan);
-    const origin = env('PUBLIC_APP_URL').replace(/\/$/, '');
+    const origin = process.env.VERCEL_ENV === 'preview'
+  ? `https://${env('VERCEL_URL')}`
+  : env('PUBLIC_APP_URL').replace(/\/$/, '');
     const reference = `JT-${user.id.replace(/-/g, '').slice(0, 16)}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`.slice(0, 50);
     const intentRes = await supabaseRest('jobtrack_payment_intents', {
       method: 'POST',
