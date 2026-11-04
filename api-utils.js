@@ -63,31 +63,28 @@ function planDetails(plan) {
   return { amount: 15000, cycle: 'monthly', days: 30, name: 'JobTrack Pro Monthly' };
 }
 
+
 async function activatePro({ userId, plan, merchantReference, trackingId, amount, currency = 'UGX' }) {
-  const p = planDetails(plan);
-  const now = new Date();
-  const expires = new Date(now.getTime() + p.days * 24 * 60 * 60 * 1000);
-  const body = {
-    user_id: userId,
-    plan: 'pro',
-    billing_cycle: p.cycle,
-    status: 'active',
-    provider: 'pesapal',
-    provider_merchant_reference: merchantReference,
-    provider_tracking_id: trackingId,
-    amount,
-    currency,
-    started_at: now.toISOString(),
-    expires_at: expires.toISOString(),
-    updated_at: now.toISOString()
-  };
-  const r = await supabaseRest('jobtrack_subscriptions?on_conflict=user_id', {
+  const r = await supabaseRest('rpc/activate_jobtrack_payment', {
     method: 'POST',
-    headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-    body: JSON.stringify(body)
+    body: JSON.stringify({
+      p_merchant_reference: merchantReference,
+      p_tracking_id: trackingId
+    })
   });
-  if (!r.ok) throw new Error(`Could not save subscription: ${await r.text()}`);
-  return expires.toISOString();
+
+  const data = await r.json().catch(() => ({}));
+
+  if (!r.ok) {
+    throw new Error(data.message || data.error || 'Could not activate subscription');
+  }
+
+  if (data.status !== 'activated' && data.status !== 'duplicate') {
+    throw new Error('Unexpected subscription activation response');
+  }
+
+  return data.expires_at || null;
 }
+
 
 module.exports = { env, supabaseUserFromRequest, supabaseRest, pesapalToken, pesapalStatus, planDetails, activatePro };
