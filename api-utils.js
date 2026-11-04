@@ -30,21 +30,44 @@ async function supabaseRest(path, options = {}) {
 }
 
 async function pesapalToken() {
-  const base = (process.env.PESAPAL_ENVIRONMENT === 'live'
-    ? 'https://pay.pesapal.com/v3'
-    : 'https://cybqa.pesapal.com/pesapalv3').replace(/\/$/, '');
+  const isPreview = process.env.VERCEL_ENV === 'preview';
+
+  const environment = isPreview
+    ? 'sandbox'
+    : env('PESAPAL_ENVIRONMENT');
+
+  const consumerKey = env(
+    isPreview ? 'PESAPAL_SANDBOX_CONSUMER_KEY' : 'PESAPAL_CONSUMER_KEY'
+  );
+
+  const consumerSecret = env(
+    isPreview ? 'PESAPAL_SANDBOX_CONSUMER_SECRET' : 'PESAPAL_CONSUMER_SECRET'
+  );
+
+  const base = (
+    environment === 'live'
+      ? 'https://pay.pesapal.com/v3'
+      : 'https://cybqa.pesapal.com/pesapalv3'
+  ).replace(/\/$/, '');
+
   const r = await fetch(`${base}/api/Auth/RequestToken`, {
     method: 'POST',
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
-      consumer_key: env('PESAPAL_CONSUMER_KEY'),
-      consumer_secret: env('PESAPAL_CONSUMER_SECRET')
+      consumer_key: consumerKey,
+      consumer_secret: consumerSecret
     })
   });
+
   const data = await r.json().catch(() => ({}));
- if (!r.ok || !data.token) {
-  throw new Error(JSON.stringify(data));
-}
+
+  if (!r.ok || !data.token) {
+    throw new Error(JSON.stringify(data));
+  }
+
   return { token: data.token, base };
 }
 
