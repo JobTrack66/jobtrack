@@ -14,7 +14,6 @@ async function handle(req, res) {
       const intent = rows[0];
       if (intent) {
         await activatePro({ userId: intent.user_id, plan: intent.plan, merchantReference: reference, trackingId, amount: intent.amount });
-        await supabaseRest(`jobtrack_payment_intents?merchant_reference=eq.${encodeURIComponent(reference)}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ status: 'completed', tracking_id: trackingId, updated_at: new Date().toISOString() }) });
       }
       return res.redirect('/?payment=success');
     }
