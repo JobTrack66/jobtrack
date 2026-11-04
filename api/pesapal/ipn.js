@@ -26,19 +26,6 @@ if (intent) {
       trackingId,
       amount: intent.amount
     });
-
-    await supabaseRest(
-      `jobtrack_payment_intents?merchant_reference=eq.${encodeURIComponent(reference)}`,
-      {
-        method: 'PATCH',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          status: 'completed',
-          tracking_id: trackingId,
-          updated_at: new Date().toISOString()
-        })
-      }
-    );
   } else if (code === 2 || code === 3 || code === 0) {
     await supabaseRest(
       `jobtrack_payment_intents?merchant_reference=eq.${encodeURIComponent(reference)}`,
